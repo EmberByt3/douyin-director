@@ -28,7 +28,7 @@ jobs:
       - if: runner.os == 'Windows'
         run: node scripts/verify-package.mjs
       - if: always() && runner.os == 'Windows'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: windows-ui-evidence
           path: |
