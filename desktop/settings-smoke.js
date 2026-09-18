@@ -16,7 +16,7 @@ export async function smokeSettings(window, phase) {
     if (${JSON.stringify(phase)} === 'write') {
       const keyInput = document.getElementById('setting-deepseek.apiKey');
       const reveal = keyInput.parentElement.querySelector('button'); reveal.click();
-      await new Promise(r=>setTimeout(r,150));
+      for(let i=0;i<100 && keyInput.type!=='text';i++) await new Promise(r=>setTimeout(r,50));
       assert(keyInput.type==='text' && keyInput.value==='synthetic-settings-old-key','Reveal failed');
       reveal.click(); assert(keyInput.type==='password' && keyInput.value==='','Hide failed');
       keyInput.value='synthetic-settings-new-key'; keyInput.dispatchEvent(new Event('input'));

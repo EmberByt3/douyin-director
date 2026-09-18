@@ -25,6 +25,8 @@ for(const phase of ['write','reload','cleared']){
       clearTimeout(timer);fs.writeFileSync(path.join(dir,`${packaged?'packaged':'source'}-${phase}.log`),out+'\n'+err);
       if(code!==0||!out.includes('Desktop smoke test passed')) {
         console.error(out.slice(-6000)); console.error(err.slice(-6000));
+        const startupLog=path.join(profile,'startup.log');
+        if(fs.existsSync(startupLog))console.error(fs.readFileSync(startupLog,'utf8').slice(-6000));
         reject(new Error(`Desktop smoke failed (${phase}, exit ${code}); see artifacts/desktop-smoke`));
       } else resolve();
     });

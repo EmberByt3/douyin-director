@@ -546,14 +546,24 @@ function stopTunnel() {
 async function finishSmokeTest() {
   const screenshotPath = process.env.DESKTOP_SMOKE_SCREENSHOT;
   if (!screenshotPath || !mainWindow || mainWindow.isDestroyed()) return;
-  await new Promise((resolve) => setTimeout(resolve, 800));
-  const rendererState = await mainWindow.webContents.executeJavaScript(`({
-    status: document.getElementById("statusText")?.textContent || "",
-    submitDisabled: Boolean(document.getElementById("submitJob")?.disabled)
-  })`);
+  // CI can finish loading the account before the billing catalog has rendered.
+  // Wait for observable readiness instead of assuming a fixed machine speed.
+  let rendererState;
+  const deadline = Date.now() + 15000;
+  do {
+    rendererState = await mainWindow.webContents.executeJavaScript(`({
+      status: document.getElementById("statusText")?.textContent || "",
+      submitDisabled: Boolean(document.getElementById("submitJob")?.disabled),
+      localReady: document.body.classList.contains('local-direct-mode') && document.getElementById('analyzeCost')?.textContent === '本机直连'
+    })`);
+    if (rendererState.status.includes("服务已就绪") && !rendererState.submitDisabled &&
+      (process.env.DESKTOP_SMOKE_LOCAL_DIRECT !== "true" || rendererState.localReady)) break;
+    await new Promise(resolve => setTimeout(resolve, 100));
+  } while (Date.now() < deadline);
   if (
     !rendererState.status.includes("服务已就绪") ||
-    rendererState.submitDisabled
+    rendererState.submitDisabled ||
+    (process.env.DESKTOP_SMOKE_LOCAL_DIRECT === "true" && !rendererState.localReady)
   ) {
     throw new Error(`桌面界面脚本未就绪：${JSON.stringify(rendererState)}`);
   }
