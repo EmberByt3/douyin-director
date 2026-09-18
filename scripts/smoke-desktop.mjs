@@ -23,9 +23,11 @@ for(const phase of ['write','reload','cleared']){
     child.on('error',error=>{clearTimeout(timer);reject(error);});
     child.on('close',code=>{
       clearTimeout(timer);fs.writeFileSync(path.join(dir,`${packaged?'packaged':'source'}-${phase}.log`),out+'\n'+err);
-      if(code!==0||!out.includes('Desktop smoke test passed'))reject(new Error(`Desktop smoke failed (${phase}); see artifacts/desktop-smoke`));else resolve();
+      if(code!==0||!out.includes('Desktop smoke test passed')) {
+        console.error(out.slice(-6000)); console.error(err.slice(-6000));
+        reject(new Error(`Desktop smoke failed (${phase}, exit ${code}); see artifacts/desktop-smoke`));
+      } else resolve();
     });
   });
   console.log(`Desktop ${packaged?'packaged':'source'} smoke passed: ${phase}`);
 }
-

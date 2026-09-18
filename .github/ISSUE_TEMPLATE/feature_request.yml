@@ -13,4 +13,3 @@ body:
       label: Proposed behavior / 期望行为
     validations:
       required: true
-

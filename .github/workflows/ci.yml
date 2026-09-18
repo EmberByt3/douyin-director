@@ -25,10 +25,12 @@ jobs:
         run: npm run test:desktop
       - if: runner.os == 'Windows'
         run: npm run build:dir
-      - if: runner.os == 'Windows'
+      - if: always() && runner.os == 'Windows'
         uses: actions/upload-artifact@v4
         with:
           name: windows-ui-evidence
-          path: artifacts/desktop-smoke/*.png
+          path: |
+            artifacts/desktop-smoke/*.png
+            artifacts/desktop-smoke/*.log
+            artifacts/desktop-smoke/profile-*/startup.log
           retention-days: 7
-

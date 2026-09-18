@@ -26,6 +26,7 @@
     "electron-builder": "26.0.12"
   },
   "build": {
+    "electronDist": "node_modules/electron/dist",
     "productName": "Douyin Director Open Source",
     "appId": "org.douyindirector.opensource",
     "extraResources": [

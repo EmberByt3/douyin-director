@@ -14,4 +14,3 @@ assert.equal(pkg.license,'MIT');
 assert(pkg.build.files.includes('!**/.env*'));
 assert(!pkg.build.extraResources.some(r=>r.from.includes('runtime')||r.from.includes('external')));
 console.log('Public packaging defaults passed: local mode, no private config or bundled third-party runtime.');
-

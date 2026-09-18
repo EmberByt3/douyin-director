@@ -26,4 +26,3 @@ body:
     attributes:
       label: Redacted logs / 脱敏日志
       description: Remove keys, account details, personal paths and private video links.
-

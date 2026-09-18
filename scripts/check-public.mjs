@@ -34,4 +34,3 @@ for(const file of files){
 }
 if(problems.length){for(const [file,reason] of problems)console.error(`${file}: ${reason}`);process.exit(1);}
 console.log(`Public-source checks passed (${files.length} files). This heuristic complements review; it is not a guarantee that all secrets are detected.`);
-

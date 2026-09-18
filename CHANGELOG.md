@@ -11,4 +11,3 @@ First public open-source edition of Douyin Director.
 - Use a configurable, user-installed FFmpeg executable; make Python fallback optional.
 - Provide public-only packaging defaults, offline regression tests, Windows UI checks and CI.
 - Include MIT licensing, configuration/development/privacy documentation and contribution templates.
-

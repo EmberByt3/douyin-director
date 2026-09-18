@@ -5,4 +5,3 @@ for (const name of tests) {
   if (result.status !== 0) { console.error(`FAILED: ${name}`); process.exit(result.status || 1); }
 }
 console.log(`All ${tests.length} offline suites passed.`);
-

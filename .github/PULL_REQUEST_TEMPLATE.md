@@ -8,4 +8,3 @@ Describe the user-visible problem and resulting behavior.
 - [ ] `npm run check:public`
 - [ ] UI/build validation when relevant
 - [ ] No real credentials, session data or private media included
-

@@ -8,4 +8,3 @@ console.log(`Execution mode: ${config.localDirect ? 'local direct' : 'legacy clo
 for (const [name,key] of [['Text',config.deepseek.apiKey],['Vision',config.minimax.apiKey],['ASR',config.volcano.apiKey]]) console.log(`${name} key in source environment: ${key ? 'configured' : 'not configured (you can use desktop Settings)'}`);
 console.log('Encrypted desktop settings are not read by this CLI check.');
 if (major < 22 || result.status !== 0) process.exitCode = 1;
-

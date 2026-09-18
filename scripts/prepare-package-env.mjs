@@ -8,4 +8,3 @@ fs.mkdirSync(path.join(root, 'build'), { recursive: true });
 fs.writeFileSync(path.join(root, 'build', 'private.env'), defaults);
 fs.copyFileSync(path.join(root, 'LICENSE'), path.join(root, 'build', 'LICENSE.txt'));
 console.log('Prepared public defaults; no developer configuration was read.');
-
