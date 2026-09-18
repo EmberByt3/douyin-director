@@ -18,6 +18,8 @@ The application runs locally and calls your configured model providers directly.
 
 ## Quick start (Windows 10/11 x64)
 
+Prebuilt Windows installers and SHA-256 checksums are available in [GitHub Releases](https://github.com/R1CKYy-220/douyin-director/releases/latest). They do not require a separate Node.js installation, but still require FFmpeg and your own provider credentials.
+
 Install Node.js 22+, Git and [FFmpeg](https://ffmpeg.org/download.html). Add FFmpeg to PATH or configure its executable path in Settings.
 
 ```powershell

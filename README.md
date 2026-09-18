@@ -25,6 +25,8 @@
 
 ## 从源码运行
 
+也可以从 [GitHub Releases](https://github.com/R1CKYy-220/douyin-director/releases/latest) 下载 Windows 安装包及 SHA-256 校验文件。安装包无需另装 Node.js，但仍需 FFmpeg 和自己的模型 API Key。
+
 准备 Node.js 22 或更新版本、Git，以及可执行的 FFmpeg。
 
 1. 从 [FFmpeg 官方下载入口](https://ffmpeg.org/download.html) 选择适合系统的构建，将其 `bin` 目录加入 `PATH`。也可以稍后在设置页填写 `ffmpeg.exe` 的完整路径。
