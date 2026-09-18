@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "electron": "^37.2.4",
-    "electron-builder": "26.0.12"
+    "electron-builder": "26.15.3"
   },
   "build": {
     "electronDist": "node_modules/electron/dist",
