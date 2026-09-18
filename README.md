@@ -1,6 +1,6 @@
 # Douyin Director · 抖音编导拆解台
 
-[![CI](https://github.com/R1CKYy-220/douyin-director/actions/workflows/ci.yml/badge.svg)](https://github.com/R1CKYy-220/douyin-director/actions/workflows/ci.yml)
+[![CI](https://github.com/EmberByt3/douyin-director/actions/workflows/ci.yml/badge.svg)](https://github.com/EmberByt3/douyin-director/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-orange.svg)](LICENSE)
 
 把短视频拆成可回看的画面证据、口播时间线、内容结构和脚本参考。
@@ -25,7 +25,7 @@
 
 ## 从源码运行
 
-也可以从 [GitHub Releases](https://github.com/R1CKYy-220/douyin-director/releases/latest) 下载 Windows 安装包及 SHA-256 校验文件。安装包无需另装 Node.js，但仍需 FFmpeg 和自己的模型 API Key。
+也可以从 [GitHub Releases](https://github.com/EmberByt3/douyin-director/releases/latest) 下载 Windows 安装包及 SHA-256 校验文件。安装包无需另装 Node.js，但仍需 FFmpeg 和自己的模型 API Key。
 
 准备 Node.js 22 或更新版本、Git，以及可执行的 FFmpeg。
 
@@ -33,7 +33,7 @@
 2. 克隆并安装：
 
 ```powershell
-git clone https://github.com/R1CKYy-220/douyin-director.git
+git clone https://github.com/EmberByt3/douyin-director.git
 cd douyin-director
 npm ci
 Copy-Item .env.example .env
