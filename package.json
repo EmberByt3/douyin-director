@@ -1,0 +1,73 @@
+{
+  "name": "douyin-director",
+  "version": "1.7.0",
+  "description": "Open-source desktop workbench for video analysis, speech evidence and script writing",
+  "author": "R1CKYy-220 and contributors",
+  "private": true,
+  "type": "module",
+  "main": "desktop/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:desktop": "npm run prepare:package-env && electron-builder --win nsis --x64",
+    "test:desktop": "node scripts/smoke-desktop.mjs",
+    "start:api": "node server/index.js",
+    "desktop": "electron .",
+    "prepare:package-env": "node scripts/prepare-package-env.mjs",
+    "doctor": "node scripts/doctor.mjs",
+    "test": "node scripts/test.mjs",
+    "build:dir": "npm run prepare:package-env && electron-builder --win --dir --x64",
+    "check:public": "node scripts/check-public.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "electron": "^37.2.4",
+    "electron-builder": "26.0.12"
+  },
+  "build": {
+    "productName": "Douyin Director Open Source",
+    "appId": "org.douyindirector.opensource",
+    "extraResources": [
+      {
+        "to": "config/private.env",
+        "from": "build/private.env"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "desktop/assets/app-icon.ico",
+      "signAndEditExecutable": false
+    },
+    "asar": true,
+    "nsis": {
+      "perMachine": false,
+      "oneClick": false,
+      "createDesktopShortcut": true,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false,
+      "shortcutName": "Douyin Director Open Source",
+      "license": "build/LICENSE.txt"
+    },
+    "files": [
+      "desktop/**/*",
+      "server/**/*",
+      "package.json",
+      "LICENSE",
+      "THIRD_PARTY_NOTICES.md",
+      "!**/.env*"
+    ],
+    "artifactName": "Douyin-Director-OpenSource-${version}.${ext}"
+  },
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/R1CKYy-220/douyin-director.git",
+    "type": "git"
+  },
+  "homepage": "https://github.com/R1CKYy-220/douyin-director#readme",
+  "bugs": {
+    "url": "https://github.com/R1CKYy-220/douyin-director/issues"
+  }
+}

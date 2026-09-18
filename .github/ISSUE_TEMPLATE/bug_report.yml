@@ -1,0 +1,29 @@
+name: Bug report / 问题反馈
+description: Report a reproducible problem without sharing secrets or private media.
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Version and operating system / 版本与系统
+      placeholder: 1.7.0, Windows 11 x64
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps / 复现步骤
+      description: Use public or synthetic examples. Never include API keys or session cookies.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior / 预期与实际行为
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Redacted logs / 脱敏日志
+      description: Remove keys, account details, personal paths and private video links.
+

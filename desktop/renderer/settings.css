@@ -1,0 +1,26 @@
+.settings-page { position:fixed; inset:0; z-index:100; background:#eee9df; display:flex; flex-direction:column; padding:24px max(24px,calc((100vw - 1080px)/2)); color:#25221e; }
+.settings-header { display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.settings-header h1 { margin:5px 0; font-size:27px; }
+.settings-header p { margin:6px 0 18px; color:#817970; font-size:13px; }
+.settings-tools { display:flex; gap:10px; padding:0 0 18px; }
+.settings-tools input { flex:1; min-width:180px; }
+.settings-page input,.settings-page select { border:1px solid #d5c9bb; border-radius:7px; background:#fffdf9; color:#25221e; padding:9px 11px; font:inherit; font-size:13px; min-width:0; }
+.settings-content { flex:1; min-height:0; overflow:auto; padding-right:10px; scroll-behavior:smooth; }
+.settings-group { background:#faf7f1; border:1px solid #ddd3c7; border-radius:12px; padding:20px 24px; margin-bottom:16px; }
+.settings-group h2 { margin:0 0 8px; font-size:17px; }
+.settings-group>p { margin:0 0 12px; font-size:12px; color:#877c70; line-height:1.7; }
+.setting-row { display:grid; grid-template-columns:235px minmax(0,1fr); align-items:center; gap:16px; padding:13px 0; border-top:1px solid #e8e0d5; }
+.setting-label { font-weight:600; font-size:13px; line-height:1.6; overflow-wrap:anywhere; }
+.setting-label small { display:block; font-size:10px; font-weight:400; color:#8b8176; }
+.setting-control { min-width:0; }
+.setting-input-line { display:flex; align-items:center; gap:7px; }
+.setting-input-line input,.setting-input-line select { flex:1; width:100%; }
+.setting-input-line button { flex-shrink:0; font-size:12px; min-height:34px; padding:6px 10px; }
+.setting-control .setting-value { font-size:13px; overflow-wrap:anywhere; white-space:pre-wrap; line-height:1.7; }
+.setting-note { display:block; margin-top:5px; color:#8b8176; font-size:11px; overflow-wrap:anywhere; }
+.setting-note.pending { color:#c95800; }
+.settings-footer { display:flex; align-items:center; gap:10px; padding-top:18px; }
+.settings-footer>span { flex:1; font-size:12px; line-height:1.6; }
+.settings-footer .error { color:#bd3328; }
+.settings-empty { text-align:center; padding:40px; color:#817970; }
+@media(max-width:1000px) { .setting-row { grid-template-columns:210px minmax(0,1fr); } .settings-group { padding:16px 18px; } }

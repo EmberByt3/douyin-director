@@ -1,0 +1,1184 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>抖音编导拆解台</title>
+    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="settings.css" />
+  </head>
+  <body data-app-version="1.7.0">
+    <div class="app-shell">
+      <header class="app-header">
+        <div class="brand">
+          <img class="brand-icon" src="../assets/app-icon.png" alt="" />
+          <div class="brand-copy">
+            <strong>抖音编导拆解台</strong>
+            <span>视频证据、口播与脚本结构分析</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <span id="serviceIndicator" class="service-indicator is-starting">
+            <span class="service-dot"></span>
+            本地工作台
+          </span>
+          <button
+            id="walletButton"
+            type="button"
+            class="wallet-button"
+            title="购买或查看可用次数"
+          >
+            <span>购买次数</span>
+            <strong id="walletBalance">--</strong>
+          </button>
+          <button
+            id="accountButton"
+            type="button"
+            class="button button-secondary account-button"
+          >
+            <span id="accountName">账户</span>
+          </button>
+          <button id="openDouyin" type="button" class="button button-secondary">
+            登录抖音
+          </button>
+          <button id="openSettings" type="button" class="button button-secondary">设置</button>
+          <span class="version">1.7.0</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="task-rail">
+          <div class="rail-heading">
+            <span class="eyebrow">新建任务</span>
+            <h1>拆解一条视频</h1>
+            <p>粘贴抖音分享文案、短链、作品页链接或 MP4 直链。</p>
+          </div>
+
+          <label class="field-label" for="videoUrl">视频链接</label>
+          <textarea
+            id="videoUrl"
+            rows="6"
+            placeholder="在这里粘贴链接或整段分享文案"
+          ></textarea>
+
+          <div class="primary-actions">
+            <button id="submitJob" type="button" class="button button-primary">
+              开始分析
+            </button>
+            <button
+              id="refreshJob"
+              type="button"
+              class="button button-secondary"
+            >
+              刷新状态
+            </button>
+          </div>
+
+          <section class="task-status" aria-live="polite">
+            <div class="status-line">
+              <span id="statusText">正在启动桌面服务...</span>
+              <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-track">
+              <span id="progressBar" class="progress-fill"></span>
+            </div>
+          </section>
+
+          <div class="rail-foot">
+            <div class="rail-stat">
+              <span>视频拆解</span>
+              <strong id="analyzeCost">10 点 / 次</strong>
+            </div>
+            <div class="rail-stat">
+              <span>产品仿写</span>
+              <strong id="rewriteCost">2 点 / 次</strong>
+            </div>
+            <div class="rail-stat">
+              <span>素材创作</span>
+              <strong id="libraryScriptCost">4 点 / 次</strong>
+            </div>
+          </div>
+        </aside>
+
+        <section class="workbench">
+          <nav class="tabs" role="tablist" aria-label="工作区">
+            <button
+              class="tab is-active"
+              type="button"
+              role="tab"
+              data-tab="report"
+              aria-selected="true"
+            >
+              分析报告
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              data-tab="frames"
+              aria-selected="false"
+            >
+              关键帧
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              data-tab="rewrite"
+              aria-selected="false"
+            >
+              脚本创作
+            </button>
+            <button
+              class="tab"
+              type="button"
+              role="tab"
+              data-tab="library"
+              aria-selected="false"
+            >
+              素材库
+            </button>
+          </nav>
+
+          <section
+            class="tab-panel is-active"
+            data-panel="report"
+            role="tabpanel"
+          >
+            <div class="panel-toolbar">
+              <div>
+                <span class="eyebrow">分析结果</span>
+                <h2>编导拆解报告</h2>
+              </div>
+              <div class="toolbar-actions">
+                <button
+                  id="retryMaterialSync"
+                  type="button"
+                  class="button button-secondary"
+                  hidden
+                >
+                  重新入库
+                </button>
+                <button
+                  id="copyReport"
+                  type="button"
+                  class="button button-quiet"
+                  disabled
+                >
+                  复制报告
+                </button>
+              </div>
+            </div>
+            <article id="reportText" class="report-body empty">
+              <div class="empty-state">
+                <strong>等待视频分析</strong>
+                <span
+                  >完成任务后，画面证据、原始口播和结构拆解会出现在这里。</span
+                >
+              </div>
+            </article>
+          </section>
+
+          <section class="tab-panel" data-panel="frames" role="tabpanel" hidden>
+            <div class="panel-toolbar">
+              <div>
+                <span class="eyebrow">视觉证据</span>
+                <h2>关键帧时间线</h2>
+              </div>
+              <span class="toolbar-note">5 帧 / 秒</span>
+            </div>
+            <div id="frames" class="frame-wall">
+              <div class="empty-state">
+                <strong>暂无关键帧</strong>
+                <span>开始分析后，这里会按秒展示完整画面证据。</span>
+              </div>
+            </div>
+          </section>
+
+          <section
+            class="tab-panel rewrite-panel"
+            data-panel="rewrite"
+            role="tabpanel"
+            hidden
+          >
+            <div class="panel-toolbar">
+              <div>
+                <span class="eyebrow">脚本创作</span>
+                <h2 id="creationTitle">基于对标视频仿写</h2>
+              </div>
+              <button
+                id="rewriteCopy"
+                type="button"
+                class="button button-primary"
+              >
+                生成仿写
+              </button>
+            </div>
+
+            <div
+              id="creationModes"
+              class="mode-switch"
+              role="group"
+              aria-label="创作方式"
+            >
+              <button
+                type="button"
+                class="mode-option is-active"
+                data-creation-mode="benchmark"
+              >
+                <strong>对标仿写</strong>
+                <span>沿用当前视频的结构与节奏</span>
+              </button>
+              <button
+                type="button"
+                class="mode-option"
+                data-creation-mode="library"
+              >
+                <strong>素材库创作</strong>
+                <span>组合平台库与我的素材库</span>
+              </button>
+            </div>
+
+            <div class="product-library">
+              <select id="productSelect" aria-label="选择已保存产品">
+                <option value="">选择已保存产品</option>
+              </select>
+              <button
+                id="saveProduct"
+                type="button"
+                class="button button-secondary"
+              >
+                保存产品
+              </button>
+              <button
+                id="deleteProduct"
+                type="button"
+                class="button button-danger-quiet"
+              >
+                删除
+              </button>
+            </div>
+
+            <div class="product-form">
+              <label>
+                <span>产品名</span>
+                <input
+                  id="productName"
+                  type="text"
+                  placeholder="例如：胶原修护喷雾"
+                />
+              </label>
+              <label>
+                <span>品类 / 场景</span>
+                <input
+                  id="productCategory"
+                  type="text"
+                  placeholder="例如：护肤 / 通勤补水"
+                />
+              </label>
+              <label>
+                <span>目标人群</span>
+                <input
+                  id="productAudience"
+                  type="text"
+                  placeholder="例如：敏感肌、熬夜人群"
+                />
+              </label>
+              <label>
+                <span>价格 / 活动 / 权益</span>
+                <input
+                  id="productOffer"
+                  type="text"
+                  placeholder="例如：两件八折、赠旅行装"
+                />
+              </label>
+              <label class="span-2">
+                <span>核心卖点</span>
+                <textarea
+                  id="productSellingPoints"
+                  rows="3"
+                  placeholder="成分、效果、容量、差异化设计"
+                ></textarea>
+              </label>
+              <label class="span-2">
+                <span>使用场景 / 可拍素材</span>
+                <textarea
+                  id="productScenes"
+                  rows="3"
+                  placeholder="按压出液、上脸试用、前后对比、办公室补喷"
+                ></textarea>
+              </label>
+              <label class="span-2">
+                <span>必须强调</span>
+                <textarea
+                  id="productMustSay"
+                  rows="2"
+                  placeholder="品牌背书、核心参数、活动机制"
+                ></textarea>
+              </label>
+              <label class="span-2">
+                <span>禁用 / 限制</span>
+                <textarea
+                  id="productMustAvoid"
+                  rows="2"
+                  placeholder="不能承诺治疗、不能虚构价格"
+                ></textarea>
+              </label>
+              <label>
+                <span>语气风格</span>
+                <input
+                  id="productTone"
+                  type="text"
+                  placeholder="自然口播、测评、强带货"
+                />
+              </label>
+              <label>
+                <span>期望时长</span>
+                <input
+                  id="productDuration"
+                  type="text"
+                  placeholder="例如：30 秒以内"
+                />
+              </label>
+              <label id="libraryQueryField" class="span-2" hidden>
+                <span>本次创作方向</span>
+                <input
+                  id="libraryQuery"
+                  type="text"
+                  placeholder="例如：强反差开头、通勤场景、先痛点后实测"
+                />
+              </label>
+              <fieldset
+                id="librarySourceField"
+                class="span-2 library-source-field"
+                hidden
+              >
+                <legend>素材检索范围</legend>
+                <div id="librarySources" class="source-segments">
+                  <label>
+                    <input
+                      type="radio"
+                      name="librarySource"
+                      value="both"
+                      checked
+                    />
+                    <span
+                      ><strong>二者都检索</strong
+                      ><small>平台库 + 我的素材库</small></span
+                    >
+                  </label>
+                  <label>
+                    <input type="radio" name="librarySource" value="platform" />
+                    <span
+                      ><strong>平台素材库</strong
+                      ><small>只使用平台精选素材</small></span
+                    >
+                  </label>
+                  <label>
+                    <input type="radio" name="librarySource" value="user" />
+                    <span
+                      ><strong>自建素材库</strong
+                      ><small>只使用我的飞书素材</small></span
+                    >
+                  </label>
+                </div>
+              </fieldset>
+            </div>
+
+            <div class="rewrite-status-row">
+              <p id="rewriteStatus">先完成一条视频分析，再生成产品仿写。</p>
+              <button
+                id="copyRewrite"
+                type="button"
+                class="button button-quiet"
+              >
+                复制脚本
+              </button>
+            </div>
+            <article
+              id="rewriteResult"
+              class="report-body rewrite-result empty"
+            >
+              <div class="empty-state">
+                <strong>暂无仿写脚本</strong>
+                <span>填写产品信息并生成后，脚本会出现在这里。</span>
+              </div>
+            </article>
+          </section>
+
+          <section
+            class="tab-panel library-panel"
+            data-panel="library"
+            role="tabpanel"
+            hidden
+          >
+            <div class="panel-toolbar">
+              <div>
+                <span class="eyebrow">素材来源</span>
+                <h2>双素材库</h2>
+              </div>
+              <button
+                id="refreshLibraries"
+                type="button"
+                class="button button-quiet"
+              >
+                刷新状态
+              </button>
+            </div>
+
+            <div class="library-layout">
+              <article class="library-card platform-library-card">
+                <div class="library-card-head">
+                  <div>
+                    <span class="library-kicker">平台提供 · 只读</span>
+                    <h3>基础素材库</h3>
+                  </div>
+                  <span id="platformLibraryBadge" class="connection-badge"
+                    >检查中</span
+                  >
+                </div>
+                <p>
+                  沉淀经过筛选的开头、痛点、卖点、证明和收口表达，素材库创作时自动参与匹配。
+                </p>
+                <div class="library-meta">
+                  <span>来源</span>
+                  <strong id="platformLibraryName">平台基础素材库</strong>
+                </div>
+              </article>
+
+              <article class="library-card user-library-card">
+                <div class="library-card-head">
+                  <div>
+                    <span class="library-kicker">用户自建 · 可读写</span>
+                    <h3>我的飞书素材库</h3>
+                  </div>
+                  <div class="library-head-actions">
+                    <button
+                      id="openLibraryGuide"
+                      type="button"
+                      class="library-guide-trigger"
+                    >
+                      从零配置教程
+                    </button>
+                    <span id="userLibraryBadge" class="connection-badge"
+                      >未连接</span
+                    >
+                  </div>
+                </div>
+
+                <div class="library-form">
+                  <label>
+                    <span>App ID</span>
+                    <input
+                      id="feishuAppId"
+                      type="text"
+                      autocomplete="off"
+                      placeholder="cli_xxxxxxxxxx"
+                    />
+                  </label>
+                  <label>
+                    <span>App Secret</span>
+                    <input
+                      id="feishuAppSecret"
+                      type="password"
+                      autocomplete="new-password"
+                      placeholder="首次连接时填写"
+                    />
+                  </label>
+                  <label class="span-2">
+                    <span>空白 Base 链接</span>
+                    <input
+                      id="feishuBaseUrl"
+                      type="url"
+                      autocomplete="off"
+                      placeholder="https://xxx.feishu.cn/base/xxxxxxxx"
+                    />
+                  </label>
+                </div>
+
+                <div class="library-schema-summary" aria-label="素材库结构">
+                  <div><strong>40+</strong><span>编导字段</span></div>
+                  <div><strong>18</strong><span>语义片段上限</span></div>
+                  <div><strong>30</strong><span>逐镜头上限</span></div>
+                </div>
+                <p id="libraryStatus" class="library-status">
+                  连接后将创建五张表，并配置 40+ 个编导拆解字段。
+                </p>
+                <div class="library-actions">
+                  <button
+                    id="testUserLibrary"
+                    type="button"
+                    class="button button-secondary"
+                  >
+                    测试连接
+                  </button>
+                  <button
+                    id="initializeUserLibrary"
+                    type="button"
+                    class="button button-primary"
+                  >
+                    连接并初始化
+                  </button>
+                  <button
+                    id="openUserLibrary"
+                    type="button"
+                    class="button button-quiet"
+                  >
+                    打开素材库
+                  </button>
+                  <button
+                    id="disconnectUserLibrary"
+                    type="button"
+                    class="button button-danger-quiet"
+                  >
+                    断开
+                  </button>
+                </div>
+              </article>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div id="libraryGuideOverlay" class="setup-guide-overlay" hidden>
+      <button
+        id="libraryGuideBackdrop"
+        class="setup-guide-backdrop"
+        type="button"
+        aria-label="关闭飞书素材库配置教程"
+      ></button>
+      <aside
+        class="setup-guide-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="libraryGuideTitle"
+      >
+        <header class="setup-guide-header">
+          <div>
+            <span class="eyebrow">飞书素材库接入指南</span>
+            <h2 id="libraryGuideTitle">从零连接到工作台</h2>
+            <p>按顺序完成 7 步，通常只需要配置一次。</p>
+          </div>
+          <button
+            id="closeLibraryGuide"
+            class="icon-button"
+            type="button"
+            title="关闭"
+            aria-label="关闭"
+          >
+            ×
+          </button>
+        </header>
+
+        <div class="setup-guide-body">
+          <div class="guide-scope-note">
+            <strong>先看结论</strong>
+            <p>
+              你需要一个飞书企业自建应用、一张空白多维表格，以及该表格的管理权限。工作台会自动创建 5 张表和 40+ 个字段，无需手工建表。
+            </p>
+            <div class="guide-scope-tags" aria-label="无需配置的功能">
+              <span>无需机器人</span><span>无需事件订阅</span
+              ><span>无需回调地址</span><span>无需公网服务器</span>
+            </div>
+          </div>
+
+          <nav class="guide-step-nav" aria-label="教程步骤">
+            <a href="#libraryGuideStep1">准备</a>
+            <a href="#libraryGuideStep2">创建应用</a>
+            <a href="#libraryGuideStep3">开通权限</a>
+            <a href="#libraryGuideStep4">发布应用</a>
+            <a href="#libraryGuideStep5">创建 Base</a>
+            <a href="#libraryGuideStep6">连接工作台</a>
+            <a href="#libraryGuideStep7">验收</a>
+          </nav>
+
+          <section id="libraryGuideStep1" class="guide-step">
+            <div class="guide-step-index">01</div>
+            <div class="guide-step-content">
+              <h3>准备飞书账号和权限</h3>
+              <ol>
+                <li>使用准备存放素材库的飞书企业账号登录。</li>
+                <li>
+                  确认自己可以创建企业自建应用；没有权限时，让企业管理员在飞书管理后台开放应用创建权限，或由管理员协助创建。
+                </li>
+                <li>
+                  应用和多维表格必须位于同一个飞书企业。跨企业的应用无法直接访问另一家企业的文档。
+                </li>
+              </ol>
+              <div class="guide-tip">
+                个人测试建议先用一张全新的空白多维表格，不要启用高级权限，排查最省事。
+              </div>
+            </div>
+          </section>
+
+          <section id="libraryGuideStep2" class="guide-step">
+            <div class="guide-step-index">02</div>
+            <div class="guide-step-content">
+              <h3>创建企业自建应用</h3>
+              <ol>
+                <li>点击下方按钮进入飞书开放平台，登录后选择当前企业。</li>
+                <li>点击“创建企业自建应用”，填写应用名称、描述和图标。</li>
+                <li>
+                  进入“凭证与基础信息”，复制 <b>App ID</b> 和
+                  <b>App Secret</b>。App ID 通常以 <code>cli_</code> 开头。
+                </li>
+              </ol>
+              <div class="guide-action-row">
+                <button
+                  type="button"
+                  class="button button-secondary"
+                  data-library-guide-link="developer-console"
+                >
+                  打开飞书开发者后台
+                </button>
+              </div>
+              <div class="guide-warning">
+                App Secret 相当于密码，不要发到群里、截图公开或写进共享文档。工作台会使用 Windows 安全存储在本机加密保存。
+              </div>
+            </div>
+          </section>
+
+          <section id="libraryGuideStep3" class="guide-step">
+            <div class="guide-step-index">03</div>
+            <div class="guide-step-content">
+              <h3>开通正确的 API 权限</h3>
+              <p>
+                在应用左侧进入“权限管理”，搜索并开通下面的权限。优先使用直接
+                <code>/base/</code> 链接，只需要第一项。
+              </p>
+              <div class="permission-list">
+                <div class="permission-row permission-required">
+                  <div>
+                    <span class="permission-level">必选</span>
+                    <strong>查看、评论、编辑和管理多维表格</strong>
+                    <code>bitable:app</code>
+                  </div>
+                  <p>用于读取 Base，并创建表、字段和记录。</p>
+                </div>
+                <div class="permission-row">
+                  <div>
+                    <span class="permission-level optional">按需</span>
+                    <strong>查看知识空间节点信息</strong>
+                    <code>wiki:node:read</code>
+                  </div>
+                  <p>仅在粘贴的链接包含 <code>/wiki/</code> 时需要。</p>
+                </div>
+              </div>
+              <div class="guide-action-row">
+                <button
+                  id="copyLibraryPermissions"
+                  type="button"
+                  class="button button-secondary"
+                >
+                  复制权限清单
+                </button>
+                <button
+                  type="button"
+                  class="button button-quiet"
+                  data-library-guide-link="bitable-permission"
+                >
+                  查看官方权限说明
+                </button>
+              </div>
+              <div class="guide-tip">
+                不要只开“查看多维表格”这类只读权限，否则测试可能通过，但初始化时无法建表或写入。
+              </div>
+            </div>
+          </section>
+
+          <section id="libraryGuideStep4" class="guide-step">
+            <div class="guide-step-index">04</div>
+            <div class="guide-step-content">
+              <h3>创建版本并发布</h3>
+              <ol>
+                <li>进入“版本管理与发布”，点击“创建版本”。</li>
+                <li>填写版本号，例如 <code>1.0.0</code>，确认可用范围包含自己。</li>
+                <li>提交发布；企业开启审核时，由管理员在管理后台批准。</li>
+                <li>看到版本状态为“已发布”后，再继续下一步。</li>
+              </ol>
+              <div class="guide-warning">
+                以后每次新增或修改权限，都要重新创建版本、发布并完成审批。只在权限页勾选但未重新发布，权限不会生效。
+              </div>
+            </div>
+          </section>
+
+          <section id="libraryGuideStep5" class="guide-step">
+            <div class="guide-step-index">05</div>
+            <div class="guide-step-content">
+              <h3>创建空白 Base，并授权给应用</h3>
+              <ol>
+                <li>在飞书“云文档”中点击“新建” → “多维表格”。</li>
+                <li>可以命名为“我的编导素材库”，保留空白即可，不需要手工添加字段。</li>
+                <li>
+                  打开多维表格右上角“…” → “更多” →
+                  <b>添加文档应用</b>，搜索刚才创建的应用。
+                </li>
+                <li>把应用添加到文档，并授予<b>可管理</b>权限。</li>
+                <li>
+                  从浏览器地址栏复制直接包含 <code>/base/</code> 的完整链接。直接 Base 链接比 Wiki 链接更稳定、所需权限更少。
+                </li>
+              </ol>
+              <div class="guide-critical">
+                <strong>API 权限和文档权限缺一不可</strong>
+                <span
+                  >应用后台开通权限，决定“能调用什么接口”；表格里添加文档应用，决定“能访问哪一张表”。</span
+                >
+              </div>
+              <div class="guide-tip">
+                搜不到应用时，先确认应用已发布、应用和 Base 属于同一企业，并刷新多维表格页面后重试。
+              </div>
+            </div>
+          </section>
+
+          <section id="libraryGuideStep6" class="guide-step">
+            <div class="guide-step-index">06</div>
+            <div class="guide-step-content">
+              <h3>连接到编导工作台</h3>
+              <ol>
+                <li>回到“素材库”页，在“我的飞书素材库”填写 App ID。</li>
+                <li>填写 App Secret。已经连接过时可以留空，沿用本机安全存储的值。</li>
+                <li>粘贴刚才复制的空白 Base 完整链接。</li>
+                <li>先点击“测试连接”，确认凭证和 Base 可访问。</li>
+                <li>
+                  再点击“连接并初始化”。工作台将自动创建或修复“视频主表、素材片段表、镜头执行表、产品表、数据复盘表”。
+                </li>
+                <li>看到“初始化完成”后，点击“打开素材库”检查表结构。</li>
+              </ol>
+              <button
+                id="goToLibraryBinding"
+                type="button"
+                class="button button-primary guide-finish-button"
+              >
+                回到绑定区开始连接
+              </button>
+            </div>
+          </section>
+
+          <section id="libraryGuideStep7" class="guide-step">
+            <div class="guide-step-index">07</div>
+            <div class="guide-step-content">
+              <h3>做一次完整验收</h3>
+              <div class="guide-checklist">
+                <label><input type="checkbox" /> 测试连接显示成功</label>
+                <label><input type="checkbox" /> 初始化提示 5 张表已创建或补齐</label>
+                <label><input type="checkbox" /> “打开素材库”可以进入自己的 Base</label>
+                <label><input type="checkbox" /> 分析一条新视频后，报告正常生成</label>
+                <label><input type="checkbox" /> 视频主表出现新记录</label>
+                <label><input type="checkbox" /> 素材片段表和镜头执行表出现拆分数据</label>
+              </div>
+              <p>
+                完成后，之后粘贴新素材进行分析时，报告生成和个人素材入库会在同一任务中执行；写入失败时可在报告页点击“重新入库”。
+              </p>
+            </div>
+          </section>
+
+          <section class="guide-troubleshooting" aria-labelledby="guideTroubleTitle">
+            <div class="guide-section-heading">
+              <span class="eyebrow">连接失败时</span>
+              <h3 id="guideTroubleTitle">按报错文字快速排查</h3>
+            </div>
+            <details>
+              <summary>飞书应用认证失败</summary>
+              <p>
+                检查 App ID、App Secret 是否复制完整，前后不要有空格；Secret 重置后必须填写新值；并确认应用版本已发布。
+              </p>
+            </details>
+            <details>
+              <summary>Permission denied / 99991663</summary>
+              <p>
+                通常是未开通 <code>bitable:app</code>，或修改权限后没有重新发布版本并完成企业审批。
+              </p>
+            </details>
+            <details>
+              <summary>Permission denied / 1254302</summary>
+              <p>
+                通常是 Base 没有添加该应用为“文档应用”，或只给了只读权限。回到 Base 授予应用可管理权限。
+              </p>
+            </details>
+            <details>
+              <summary>BaseTokenNotFound / 1254040</summary>
+              <p>
+                链接或 token 不正确。重新从目标多维表格地址栏复制完整的 <code>https://.../base/...</code> 链接。
+              </p>
+            </details>
+            <details>
+              <summary>Wiki space permission denied / 131006</summary>
+              <p>
+                当前使用的是 <code>/wiki/</code> 链接。推荐改用直接 <code>/base/</code> 链接；否则开通 <code>wiki:node:read</code> 并给应用知识库节点访问权限。
+              </p>
+            </details>
+            <details>
+              <summary>测试成功，但初始化建表失败</summary>
+              <p>
+                说明凭证可用，但写权限不足。确认使用的是“查看、评论、编辑和管理多维表格”，并确认文档应用权限为可管理。
+              </p>
+            </details>
+          </section>
+
+          <div class="guide-security-footer">
+            <strong>安全提醒</strong>
+            <span
+              >每位用户只连接自己的应用和 Base。不要共用 App Secret；离开电脑前可在绑定区点击“断开”，清除本机保存的凭据。</span
+            >
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div id="accountOverlay" class="account-overlay" hidden>
+      <button
+        id="accountBackdrop"
+        class="account-backdrop"
+        type="button"
+        aria-label="关闭账户面板"
+      ></button>
+      <aside class="account-drawer" aria-labelledby="accountTitle">
+        <header class="drawer-header">
+          <div>
+            <span class="eyebrow">账户中心</span>
+            <h2 id="accountTitle">账户与测试次数</h2>
+          </div>
+          <button
+            id="closeAccount"
+            class="icon-button"
+            type="button"
+            title="关闭"
+            aria-label="关闭"
+          >
+            ×
+          </button>
+        </header>
+
+        <section id="localDirectView" class="account-view" hidden>
+          <div class="account-intro">
+            <strong>本地直连已启用</strong>
+            <p>视频在本机处理，由本机直接调用模型接口。无需云端账户或测试次数；模型用量由接口提供方计费。</p>
+          </div>
+        </section>
+        <section id="signedOutView" class="account-view">
+          <div class="account-intro">
+            <strong>登录后开始分析</strong>
+            <p>
+              使用邀请码注册测试账户，通过 CDK 兑换拆解、仿写和素材创作次数。
+            </p>
+          </div>
+          <div
+            id="authModes"
+            class="auth-modes"
+            role="tablist"
+            aria-label="账户操作"
+          >
+            <button type="button" class="is-active" data-auth-mode="login">
+              登录
+            </button>
+            <button type="button" data-auth-mode="register">邀请码注册</button>
+          </div>
+          <label class="drawer-field">
+            <span>邮箱</span>
+            <input
+              id="loginEmail"
+              type="email"
+              autocomplete="email"
+              placeholder="name@company.com"
+            />
+          </label>
+          <label class="drawer-field">
+            <span>密码</span>
+            <input
+              id="loginPassword"
+              type="password"
+              autocomplete="current-password"
+              maxlength="128"
+              placeholder="请输入密码"
+            />
+          </label>
+          <label id="registerNameField" class="drawer-field" hidden>
+            <span>称呼</span>
+            <input
+              id="loginName"
+              type="text"
+              autocomplete="name"
+              placeholder="例如：小米编导组"
+            />
+          </label>
+          <label id="registerInviteField" class="drawer-field" hidden>
+            <span>邀请码</span>
+            <input
+              id="registerInviteCode"
+              type="text"
+              autocomplete="off"
+              maxlength="80"
+              placeholder="INV-XXXX-XXXX-XXXX"
+            />
+          </label>
+          <button
+            id="loginAccount"
+            class="button button-primary button-wide"
+            type="button"
+          >
+            安全登录
+          </button>
+          <button
+            id="forgotPassword"
+            class="text-button auth-help"
+            type="button"
+          >
+            忘记密码
+          </button>
+          <p id="loginStatus" class="form-status">使用邮箱和密码登录。</p>
+        </section>
+
+        <section id="signedInView" class="account-view" hidden>
+          <div class="balance-section">
+            <span>可用次数</span>
+            <strong id="drawerBalance">0</strong>
+            <p id="drawerIdentity">--</p>
+          </div>
+
+          <section
+            id="emailVerificationPanel"
+            class="verification-panel"
+            aria-labelledby="verificationTitle"
+            hidden
+          >
+            <div class="drawer-section-heading">
+              <div>
+                <h3 id="verificationTitle">验证登录邮箱</h3>
+                <p>验证后才能兑换和使用测试次数。</p>
+              </div>
+              <span class="mode-badge mode-badge-warning">待验证</span>
+            </div>
+            <button
+              id="resendEmailVerification"
+              class="button button-secondary button-wide"
+              type="button"
+            >
+              重新发送验证邮件
+            </button>
+            <p id="emailVerificationStatus" class="form-status">
+              请检查收件箱和垃圾邮件目录。
+            </p>
+          </section>
+
+          <section class="cdk-panel" aria-labelledby="cdkTitle">
+            <div class="drawer-section-heading">
+              <h3 id="cdkTitle">兑换测试次数</h3>
+              <span class="mode-badge">CDK</span>
+            </div>
+            <div class="cdk-form">
+              <input
+                id="cdkCode"
+                type="text"
+                autocomplete="off"
+                maxlength="80"
+                placeholder="CDK-XXXX-XXXX-XXXX-XXXX"
+              />
+              <button
+                id="redeemCdk"
+                class="button button-secondary"
+                type="button"
+              >
+                兑换 5 次
+              </button>
+            </div>
+            <p id="cdkStatus" class="form-status">
+              拆解、仿写、素材创作均消耗 1 次。
+            </p>
+          </section>
+
+          <details class="account-security">
+            <summary>账户安全与修改密码</summary>
+            <div class="security-fields">
+              <input
+                id="currentAccountPassword"
+                type="password"
+                autocomplete="current-password"
+                maxlength="128"
+                placeholder="当前密码"
+              />
+              <input
+                id="newAccountPassword"
+                type="password"
+                autocomplete="new-password"
+                minlength="10"
+                maxlength="128"
+                placeholder="新密码（至少10位，含字母和数字）"
+              />
+              <input
+                id="confirmAccountPassword"
+                type="password"
+                autocomplete="new-password"
+                minlength="10"
+                maxlength="128"
+                placeholder="确认新密码"
+              />
+              <button
+                id="changeAccountPassword"
+                class="button button-secondary"
+                type="button"
+              >
+                修改密码
+              </button>
+            </div>
+            <p id="accountSecurityStatus" class="form-status"></p>
+          </details>
+
+          <div class="drawer-section-heading" hidden>
+            <h3>购买次数</h3>
+            <span id="billingModeBadge" class="mode-badge">内测</span>
+          </div>
+          <div id="productList" class="product-list" hidden></div>
+
+          <div class="drawer-section-heading ledger-heading">
+            <h3>最近流水</h3>
+            <button id="refreshAccount" class="text-button" type="button">
+              刷新
+            </button>
+          </div>
+          <div id="ledgerList" class="ledger-list"></div>
+
+          <button
+            id="signOutAccount"
+            class="button button-secondary button-wide signout-button"
+            type="button"
+          >
+            退出账户
+          </button>
+        </section>
+
+        <section id="checkoutView" class="account-view checkout-view" hidden>
+          <button
+            id="backToProducts"
+            class="checkout-back"
+            type="button"
+            aria-label="返回套餐"
+          >
+            ← 返回套餐
+          </button>
+          <div class="checkout-heading">
+            <span>订单确认</span>
+            <h3 id="checkoutProductName">点数套餐</h3>
+          </div>
+          <div class="checkout-summary">
+            <div>
+              <span>到账点数</span>
+              <strong id="checkoutPoints">0 点</strong>
+            </div>
+            <div class="checkout-price">
+              <span>应付金额</span>
+              <strong id="checkoutPrice">¥0.0</strong>
+            </div>
+          </div>
+
+          <div class="checkout-label">支付方式</div>
+          <div
+            id="paymentMethods"
+            class="payment-methods"
+            role="group"
+            aria-label="支付方式"
+          >
+            <button
+              type="button"
+              class="payment-method is-active"
+              data-payment-method="wechat"
+            >
+              微信支付
+            </button>
+          </div>
+
+          <div id="checkoutNotice" class="checkout-notice">
+            订单由云端创建，付款完成后点数将自动到账。
+          </div>
+          <div id="paymentQrWrap" class="payment-qr" hidden>
+            <img id="paymentQr" alt="微信支付二维码" />
+            <div>
+              <strong>请使用微信扫码支付</strong>
+              <span id="paymentOrderNo"></span>
+            </div>
+          </div>
+          <button
+            id="confirmPayment"
+            class="button button-primary button-wide checkout-submit"
+            type="button"
+          >
+            生成付款码
+          </button>
+          <p id="checkoutStatus" class="form-status"></p>
+        </section>
+
+        <section
+          class="storage-settings"
+          aria-labelledby="storageSettingsTitle"
+        >
+          <div class="storage-heading">
+            <div>
+              <span class="eyebrow">本机设置</span>
+              <h3 id="storageSettingsTitle">任务存储</h3>
+            </div>
+            <span id="storageType" class="storage-type">默认位置</span>
+          </div>
+          <div class="storage-path-wrap">
+            <span>当前目录</span>
+            <code id="storagePath">读取中...</code>
+          </div>
+          <div class="storage-stats" aria-label="本地缓存统计">
+            <div>
+              <strong id="storageTaskCount">--</strong><span>本地任务</span>
+            </div>
+            <div><strong id="storageSize">--</strong><span>占用空间</span></div>
+          </div>
+          <div class="storage-actions">
+            <button
+              id="chooseStorageLocation"
+              class="button button-secondary"
+              type="button"
+            >
+              选择位置
+            </button>
+            <button
+              id="openStorageLocation"
+              class="button button-secondary"
+              type="button"
+            >
+              打开下载目录
+            </button>
+            <button
+              id="clearStorageCache"
+              class="button button-danger-quiet"
+              type="button"
+            >
+              清理缓存
+            </button>
+          </div>
+          <p id="storageStatus" class="storage-status">
+            视频、音频、关键帧和本地报告保存在这里。
+          </p>
+        </section>
+
+        <button id="openInstallLocation" class="drawer-utility" type="button">
+          打开程序安装位置
+        </button>
+      </aside>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <section id="settingsPage" class="settings-page" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" hidden>
+      <header class="settings-header">
+        <div><span class="eyebrow">本地工作台</span><h1 id="settingsTitle">全部设置</h1><p>本机直接调用模型。所有配置集中展示，保存后重启生效。</p></div>
+        <button id="closeSettings" class="button button-secondary" type="button">返回工作台</button>
+      </header>
+      <div class="settings-tools">
+        <input id="settingsSearch" type="search" aria-label="搜索配置" placeholder="搜索配置名称、模型或环境变量…" />
+        <button id="settingsStorage" class="button button-secondary" type="button">存储管理</button>
+        <button id="settingsLibrary" class="button button-secondary" type="button">编辑个人飞书连接</button>
+      </div>
+      <div id="settingsContent" class="settings-content"></div>
+      <footer class="settings-footer"><span id="settingsMessage" role="status" aria-live="polite"></span><button id="saveSettings" class="button button-primary" type="button" disabled>保存修改</button><button id="restartSettings" class="button button-secondary" type="button" disabled>重启生效</button></footer>
+    </section>
+    <script src="desktop-shim.js"></script>
+    <script src="app.js"></script>
+    <script src="settings.js"></script>
+  </body>
+</html>

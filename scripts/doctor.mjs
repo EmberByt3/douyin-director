@@ -1,0 +1,11 @@
+import { spawnSync } from 'node:child_process';
+import { config } from '../server/config.js';
+const major = Number(process.versions.node.split('.')[0]);
+const result = spawnSync(config.ffmpegPath, ['-version'], { encoding:'utf8', windowsHide:true, timeout:10000 });
+console.log(`Node.js: ${process.version} ${major >= 22 ? 'OK' : '(22 or later required)'}`);
+console.log(`FFmpeg: ${result.status === 0 ? 'OK' : 'not found; install it on PATH or set FFMPEG_PATH'}`);
+console.log(`Execution mode: ${config.localDirect ? 'local direct' : 'legacy cloud (not supported by this distribution)'}`);
+for (const [name,key] of [['Text',config.deepseek.apiKey],['Vision',config.minimax.apiKey],['ASR',config.volcano.apiKey]]) console.log(`${name} key in source environment: ${key ? 'configured' : 'not configured (you can use desktop Settings)'}`);
+console.log('Encrypted desktop settings are not read by this CLI check.');
+if (major < 22 || result.status !== 0) process.exitCode = 1;
+
